@@ -1,4 +1,4 @@
-# OpenGL Desktop App
+# 3D Engane Base
 
 Use MSYS2 on Windows
 
