@@ -41,7 +41,7 @@ void Renderer::render(VertexData &inputs)
     glUseProgram(handle);
 
     glBindVertexArray(inputs.handle);
-    glDrawElements(GL_TRIANGLE_FAN, inputs.length, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, inputs.length, GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);
 
     glUseProgram(0);

@@ -47,7 +47,7 @@ void MyApplication::setup()
     renderer = new Renderer(shaders);
 
     //IBO data
-	GLuint indexData[] = { 0, 1, 2, 3 };
+	GLuint indexData[] = { 0, 1, 2, 0, 2, 3 };
     //indexBuffer = new Renderer::IndexBuffer(indexData, 4);
 
     //VBO data
@@ -62,7 +62,7 @@ void MyApplication::setup()
 
     inputs = new VertexData();
     inputs->put(0, vertexData, 4);
-    inputs->index(indexData, 4);
+    inputs->index(indexData, 6);
     inputs->pack();
 
     surface.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
