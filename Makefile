@@ -1,8 +1,12 @@
 #OBJS specifies which files to compile as part of the project
+<<<<<<< HEAD
 OBJS_BASE = src/MyApplication.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/Program.cpp
 
 OBJS_GLUT = src/GLUTApplication.cpp $(OBJS_BASE)
 OBJS_SDL2 = src/SDL2Application.cpp $(OBJS_BASE)
+=======
+OBJS = src/MyApplication.cpp src/Application.cpp src/Surface.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp src/Mesh.cpp
+>>>>>>> Merge
 
 #CC specifies which compiler we're using
 CC = g++

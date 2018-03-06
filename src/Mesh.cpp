@@ -19,7 +19,7 @@ Mesh* Mesh::fromOBJ(string path)
                 mesh->vertexData.push_back(vec3(x, y, z));
             break;
             case 'f':
-                GLint v1, v2, v3;
+                GLuint v1, v2, v3;
                 str >> v1 >> v2 >> v3;
                 mesh->indexData.push_back(v1);
                 mesh->indexData.push_back(v2);
@@ -38,7 +38,7 @@ vec3* Mesh::getVertex()
     return vertexData.data();
 }
 
-GLint* Mesh::getIndex()
+GLuint* Mesh::getIndex()
 {
     return indexData.data();
 }

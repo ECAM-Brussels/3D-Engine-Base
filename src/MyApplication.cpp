@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Mesh.h"
 #include <iostream>
 
 
@@ -10,6 +11,7 @@ private:
     Program* program = NULL;
     Renderer *renderer = NULL;
     float angle = 0;
+    Mesh* dragon = NULL;
     
 public:
     MyApplication(int argc, char* argv[]);
@@ -50,20 +52,10 @@ void MyApplication::setup()
     renderer->setMatrix("projectionMatrix", projectionMatrix);
     renderer->setMatrix("modelViewMatrix", modelViewMatrix);
 
-    //IBO data
-	GLuint indexData[] = { 0, 1, 2, 0, 2, 3 };
+    dragon = Mesh::fromOBJ("models/dragon.obj");
 
-    //VBO data
-    vec3 vertexData[] =
-    {
-        vec3(-0.5f, -0.5f, 0.0f),
-        vec3(0.5f, -0.5f, 0.0f),
-        vec3(0.5f,  0.5f, 0.0f),
-        vec3(-0.5f,  0.5f, 0.0f)
-    };
-
-    renderer->put("VertexPos3D", vertexData, 4);
-    renderer->index(indexData, 6);
+    renderer->put("VertexPos3D", dragon->getVertex(), dragon->getVertexCount());
+    renderer->index(dragon->getIndex(), dragon->getIndexCount());
     
     setClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
 }

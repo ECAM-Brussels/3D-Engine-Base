@@ -13,14 +13,14 @@ class Mesh
 {
 private:
     vector<vec3> vertexData;
-    vector<GLint> indexData;
+    vector<GLuint> indexData;
     vector<vec3> normalData;
 
 public:
     static Mesh* fromOBJ(string path);
     void computeNormal();
     vec3* getVertex();
-    GLint* getIndex();
+    GLuint* getIndex();
     vec3* getNormal();
     size_t getVertexCount();
     size_t getIndexCount();
