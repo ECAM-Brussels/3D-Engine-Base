@@ -10,6 +10,10 @@ class MyApplication: public Application
 private:
     Program* program = NULL;
     Renderer *renderer = NULL;
+<<<<<<< HEAD
+=======
+    VertexData *inputs = NULL;
+>>>>>>> Merge
     float angle = 0;
     Mesh* dragon = NULL;
     
