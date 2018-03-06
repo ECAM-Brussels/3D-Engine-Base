@@ -52,8 +52,8 @@ Surface::Surface()
 	}
 
 	glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 
 	stopped = false;
 }
@@ -75,26 +75,26 @@ bool Surface::isStopped()
 
 void Surface::beginRender()
 {
-    //Event handler
+	//Event handler
 	SDL_Event e;
 
-    //Handle events on queue
-    while(SDL_PollEvent( &e ) != 0)
-    {
-        //User requests quit
-        if( e.type == SDL_QUIT )
-        {
-            stopped = true;
-        }
-    }
+	//Handle events on queue
+	while(SDL_PollEvent( &e ) != 0)
+	{
+		//User requests quit
+		if( e.type == SDL_QUIT )
+		{
+			stopped = true;
+		}
+	}
 
-    //Clear color buffer
+	//Clear color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Surface::endRender()
 {
-    //Update screen
+	//Update screen
 	SDL_GL_SwapWindow(gWindow);
 }
 
