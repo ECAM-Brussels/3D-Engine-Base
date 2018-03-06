@@ -48,8 +48,8 @@ void MyApplication::setup()
 
     renderer = program->createRenderer();
 
-    mat4 projectionMatrix = perspective(1.0f, 640.0f/480, 1.0f, 100.0f);
-    mat4 lookatMatrix = lookat(vec3(50, 50, 50), vec3(0, 0, 0), vec3(0, 1, 0));
+    mat4 projectionMatrix = perspective(1.0f, 640.0f/480, 1.0f, 1000.0f);
+    mat4 lookatMatrix = lookat(vec3(500, 500, 500), vec3(0, 3, 0), vec3(0, 1, 0));
     projectionMatrix = projectionMatrix * lookatMatrix;
 
     mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f); 

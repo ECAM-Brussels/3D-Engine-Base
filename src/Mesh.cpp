@@ -1,6 +1,7 @@
 #include "mesh.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 Mesh* Mesh::fromOBJ(string path)
 {
@@ -9,21 +10,25 @@ Mesh* Mesh::fromOBJ(string path)
 
     for(string line; getline(file, line); )
     {
+        if(line.size() == 0) continue;
+
         istringstream str(line);
+
+        char cmd;
 
         switch(line[0])
         {
             case 'v':
                 GLfloat x, y, z;
-                str >> x >> y >> z;
+                str >> cmd >> x >> y >> z;
                 mesh->vertexData.push_back(vec3(x, y, z));
             break;
             case 'f':
                 GLuint v1, v2, v3;
-                str >> v1 >> v2 >> v3;
-                mesh->indexData.push_back(v1);
-                mesh->indexData.push_back(v2);
-                mesh->indexData.push_back(v3);
+                str >> cmd >> v1 >> v2 >> v3;
+                mesh->indexData.push_back(v1-1);
+                mesh->indexData.push_back(v2-1);
+                mesh->indexData.push_back(v3-1);
             break;
         }
     }
