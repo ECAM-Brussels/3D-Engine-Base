@@ -16,7 +16,7 @@ Surface::Surface()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	//Create window
-	gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+	gWindow = SDL_CreateWindow("ECAM 3D Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
 	if(gWindow == NULL )
 	{
 		ostringstream out;
@@ -50,6 +50,10 @@ Surface::Surface()
 		out << "Warning: Unable to set VSync! SDL Error: " << SDL_GetError();
 		throw Exception(out.str());
 	}
+
+	glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 
 	stopped = false;
 }
