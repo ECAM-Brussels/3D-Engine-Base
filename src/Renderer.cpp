@@ -36,13 +36,35 @@ Renderer::~Renderer()
     glDeleteProgram(handle);
 }
 
-void Renderer::render(VertexData &inputs)
+void Renderer::setProjectionMatrix(mat4 pM)
+{
+    glUseProgram(handle);
+    glUniformMatrix4fv(glGetUniformLocation(handle, "projectionMatrix"), 1, GL_FALSE, pM);
+    glUseProgram(0);
+}
+
+void Renderer::setModelViewMatrix(mat4 mV)
+{
+    glUseProgram(handle);
+    glUniformMatrix4fv(glGetUniformLocation(handle, "modelViewMatrix"), 1, GL_FALSE, mV);
+    glUseProgram(0);
+}
+
+void Renderer::setVertexData(VertexData &inputs)
 {
     glUseProgram(handle);
 
     glBindVertexArray(inputs.handle);
-    glDrawElements(GL_TRIANGLES, inputs.length, GL_UNSIGNED_INT, NULL);
-    glBindVertexArray(0);
+    vertexDataLength = inputs.length;
+
+    glUseProgram(0);
+}
+
+void Renderer::render()
+{
+    glUseProgram(handle);
+
+    glDrawElements(GL_TRIANGLES, vertexDataLength, GL_UNSIGNED_INT, NULL);
 
     glUseProgram(0);
 }

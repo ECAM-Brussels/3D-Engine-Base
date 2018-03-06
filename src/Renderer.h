@@ -15,11 +15,15 @@ class Renderer
 {
 private:
     GLuint handle;
+    GLuint vertexDataLength;
 
 public:
     Renderer(vector<Shader*> &shaders);
     ~Renderer();
-    void render(VertexData &inputs);
+    void render();
+    void setVertexData(VertexData &inputs);
+    void setProjectionMatrix(mat4 pM);
+    void setModelViewMatrix(mat4 mV);
 };
 
 

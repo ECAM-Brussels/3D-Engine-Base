@@ -8,6 +8,7 @@ class MyApplication: public Application
 private:
     Renderer *renderer = NULL;
     VertexData *inputs = NULL;
+    float angle = 0;
     
 public:
     void render();
@@ -17,18 +18,23 @@ public:
 
 void MyApplication::render()
 {
-    renderer->render(*inputs);
+    angle = angle + 1.0f;
+    mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
+    renderer->setModelViewMatrix(modelViewMatrix);
+    renderer->render();
 }
 
 void MyApplication::setup()
 {
     string vertexSrc = 
-        "#version 430                                                     \n"
-        "layout (location = 0) in vec3 VertexPos3D;                       \n"
-        "void main()                                                      \n"
-        "{                                                                \n"
-        "    gl_Position = vec4( VertexPos3D.x, VertexPos3D.y, 0, 1 );    \n"
-        "}                                                                  ";
+        "#version 430                                                                                                      \n"
+        "layout (location = 0) in vec3 VertexPos3D;                                                                        \n"
+        "uniform mat4 projectionMatrix;                                                                                    \n"
+        "uniform mat4 modelViewMatrix;                                                                                     \n"
+        "void main()                                                                                                       \n"
+        "{                                                                                                                 \n"
+        "    gl_Position = projectionMatrix * modelViewMatrix * vec4( VertexPos3D.x, VertexPos3D.y, VertexPos3D.z, 1 );    \n"
+        "}                                                                                                                   ";
 
     Shader vShader(vertexSrc, SHADER_VERTEX);
 
@@ -45,6 +51,14 @@ void MyApplication::setup()
     shaders.push_back(&vShader);
     shaders.push_back(&pShader);
     renderer = new Renderer(shaders);
+
+    mat4 projectionMatrix = perspective(1.0f, 640.0f/480, 1.0f, 100.0f);
+    mat4 lookatMatrix = lookat(vec3(50, 50, 50), vec3(0, 0, 0), vec3(0, 1, 0));
+    projectionMatrix = projectionMatrix * lookatMatrix;
+
+    mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f); 
+    renderer->setProjectionMatrix(projectionMatrix);
+    renderer->setModelViewMatrix(modelViewMatrix);
 
     //IBO data
 	GLuint indexData[] = { 0, 1, 2, 0, 2, 3 };
@@ -64,6 +78,8 @@ void MyApplication::setup()
     inputs->put(0, vertexData, 4);
     inputs->index(indexData, 6);
     inputs->pack();
+
+    renderer->setVertexData(*inputs);
 
     surface.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
