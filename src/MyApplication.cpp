@@ -1,5 +1,8 @@
 #include "Application.h"
 #include <iostream>
+#include "SDL2Surface.h"
+#include "GLUTSurface.h"
+
 
 using namespace std;
 
@@ -11,10 +14,13 @@ private:
     float angle = 0;
     
 public:
+    MyApplication(ISurface* surface);
     void render();
     void setup();
     void teardown();
 };
+
+MyApplication::MyApplication(ISurface* surface): Application(surface) {}
 
 void MyApplication::render()
 {
@@ -26,6 +32,8 @@ void MyApplication::render()
 
 void MyApplication::setup()
 {
+    cout << "debut setup" << endl;
+    
     string vertexSrc = 
         "#version 430                                                                                                      \n"
         "layout (location = 0) in vec3 VertexPos3D;                                                                        \n"
@@ -36,8 +44,10 @@ void MyApplication::setup()
         "    gl_Position = projectionMatrix * modelViewMatrix * vec4( VertexPos3D.x, VertexPos3D.y, VertexPos3D.z, 1 );    \n"
         "}                                                                                                                   ";
 
-    Shader vShader(vertexSrc, SHADER_VERTEX);
+    
 
+    Shader vShader(vertexSrc, SHADER_VERTEX);
+    cout<<"mid setup"<<endl;
     string pixelSrc = 
         "#version 430                                  \n"
         "out vec4 Fragment;                            \n"
@@ -45,7 +55,7 @@ void MyApplication::setup()
         "{                                             \n"
         "    Fragment = vec4( 1.0, 1.0, 1.0, 1.0 );    \n"
         "}                                               ";
-
+    
     Shader pShader(pixelSrc, SHADER_PIXEL);
     vector<Shader*> shaders;
     shaders.push_back(&vShader);
@@ -80,8 +90,9 @@ void MyApplication::setup()
     inputs->pack();
 
     renderer->setVertexData(*inputs);
-
-    surface.setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    
+    surface->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    cout << "end setup" << endl;
 }
 
 void MyApplication::teardown()
@@ -90,11 +101,12 @@ void MyApplication::teardown()
     delete inputs;
 }
 
-int main( int argc, char* args[] )
+int main(int argc, char* argv[])
 {
     try 
     {
-        MyApplication app = MyApplication();
+        MyApplication app = MyApplication(new GLUTSurface(argc, argv));
+        //MyApplication app = MyApplication(new SDL2Surface());
 	    return app.run();
     }
 	catch(Exception e)

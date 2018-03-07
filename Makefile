@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = src/MyApplication.cpp src/Application.cpp src/Surface.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp
+OBJS = src/MyApplication.cpp src/Application.cpp src/SDL2Surface.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp src/GLUTSurface.cpp
 
 #CC specifies which compiler we're using
 CC = g++
@@ -16,7 +16,7 @@ LIBRARY_PATHS =
 COMPILER_FLAGS = -w
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lglew32 -lglu32 -lopengl32
+LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lglew32 -lglu32 -lopengl32 -lfreeglut
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = Engine3D

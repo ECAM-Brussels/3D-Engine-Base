@@ -1,18 +1,29 @@
 #include "Application.h"
-#include "Surface.h"
+#include "ISurface.h"
 #include <iostream>
 
 using namespace std;
+
+Application::Application(ISurface* surface) 
+{
+    this->surface = surface;
+    surface->setApplication(this);
+}
+
+Application::~Application()
+{
+    delete surface;
+}
 
 int Application::run()
 {
     setup();
 
-    while(!surface.isStopped())
+    while(!surface->isStopped())
     {
-        surface.beginRender();
+        surface->beginRender();
         render();
-        surface.endRender();
+        surface->endRender();
     }
 
     teardown();

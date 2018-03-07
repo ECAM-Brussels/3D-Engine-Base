@@ -1,27 +1,30 @@
-#ifndef SURFACE_H
-#define SURFACE_H
+#ifndef SDL2SURFACE_H
+#define SDL2SURFACE_H
 
 #include "opengl.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #include <string>
 #include <vector>
 #include "vmath.h"
 #include "Exception.h"
 #include <sstream>
+#include "ISurface.h"
 
 using namespace std;
 using namespace vmath;
 
-class Surface
+class SDL2Surface : public ISurface
 {
 public:
-    Surface();
-    ~Surface();
+    SDL2Surface();
+    ~SDL2Surface();
+    void setApplication(Application* app);
     bool isStopped();
     void beginRender();
     void endRender();
 
     void setClearColor(GFloat, GFloat, GFloat, GFloat);
-    //void render(Pipeline *pipeline, VertexBuffer *vertexBuffer, IndexBuffer *indexBuffer);
 
 private:
     //Screen dimension constants

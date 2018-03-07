@@ -1,6 +1,6 @@
-#include "Surface.h"
+#include "SDL2Surface.h"
 
-Surface::Surface()
+SDL2Surface::SDL2Surface()
 {
 	//Initialize SDL
 	if( SDL_Init(SDL_INIT_VIDEO ) < 0)
@@ -58,7 +58,7 @@ Surface::Surface()
 	stopped = false;
 }
 
-Surface::~Surface()
+SDL2Surface::~SDL2Surface()
 {
 	//Destroy window	
 	SDL_DestroyWindow(gWindow);
@@ -68,12 +68,17 @@ Surface::~Surface()
 	SDL_Quit();
 }
 
-bool Surface::isStopped()
+void SDL2Surface::setApplication(Application* app)
+{
+
+}
+
+bool SDL2Surface::isStopped()
 {
 	return stopped; 
 }
 
-void Surface::beginRender()
+void SDL2Surface::beginRender()
 {
 	//Event handler
 	SDL_Event e;
@@ -92,13 +97,13 @@ void Surface::beginRender()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Surface::endRender()
+void SDL2Surface::endRender()
 {
 	//Update screen
 	SDL_GL_SwapWindow(gWindow);
 }
 
-void Surface::setClearColor(GFloat red, GFloat green, GFloat blue, GFloat alpha)
+void SDL2Surface::setClearColor(GFloat red, GFloat green, GFloat blue, GFloat alpha)
 {
 	glClearColor(red, green, blue, alpha);
 }
