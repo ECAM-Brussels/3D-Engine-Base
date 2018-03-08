@@ -1,10 +1,13 @@
 #include "Shader.h"
 #include "Exception.h"
 #include <sstream>
+#include <iostream>
 
 Shader::Shader(string src, ShaderType type)
 {
+    
     handle = glCreateShader(type);
+    cout << "createShader" << endl;
     const char *strData = src.c_str();
     glShaderSource(handle, 1, &strData, NULL);
     

@@ -1,7 +1,5 @@
 #include "Application.h"
 #include <iostream>
-#include "SDL2Surface.h"
-#include "GLUTSurface.h"
 
 
 using namespace std;
@@ -14,20 +12,33 @@ private:
     float angle = 0;
     
 public:
-    MyApplication(ISurface* surface);
+    MyApplication(int argc, char* argv[]);
+    ~MyApplication();
     void render();
     void setup();
     void teardown();
 };
 
-MyApplication::MyApplication(ISurface* surface): Application(surface) {}
+MyApplication::MyApplication(int argc, char* argv[]) : Application(argc, argv)
+{
+    cout << "MyApp destroyed" << endl;
+}
+
+MyApplication::~MyApplication()
+{
+    cout << "MyApp destroyed" << endl;
+}
 
 void MyApplication::render()
 {
+    cout << "begin Render" << endl;
     angle = angle + 1.0f;
     mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
+    cout << "yop1" << endl;
     renderer->setModelViewMatrix(modelViewMatrix);
+    cout << "yop2" << endl;
     renderer->render();
+    cout << "end Render" << endl;
 }
 
 void MyApplication::setup()
@@ -91,7 +102,7 @@ void MyApplication::setup()
 
     renderer->setVertexData(*inputs);
     
-    surface->setClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    setClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
     cout << "end setup" << endl;
 }
 
@@ -101,11 +112,11 @@ void MyApplication::teardown()
     delete inputs;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     try 
     {
-        MyApplication app = MyApplication(new GLUTSurface(argc, argv));
+        MyApplication app = MyApplication(argc, argv); 
         //MyApplication app = MyApplication(new SDL2Surface());
 	    return app.run();
     }

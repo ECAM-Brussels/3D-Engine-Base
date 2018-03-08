@@ -1,10 +1,21 @@
-#include "SDL2Surface.h"
+#include "Application.h"
 
+#include <GL/glew.h>
+#include <GL/glu.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <iostream>
+#include "Exception.h"
+#include <sstream>
 
+using namespace std;
 
-SDL2Surface::SDL2Surface()
+//The window we'll be rendering to
+SDL_Window* gWindow = NULL; 
+
+Application::Application(int argc, char* argv[]) 
 {
-	//Initialize SDL
+    //Initialize SDL
 	if( SDL_Init(SDL_INIT_VIDEO ) < 0)
 	{
 		ostringstream out;
@@ -27,7 +38,7 @@ SDL2Surface::SDL2Surface()
 	}
 	
 	//Create context
-	gContext = SDL_GL_CreateContext(gWindow );
+	SDL_GLContext gContext = SDL_GL_CreateContext(gWindow );
 	if(gContext == NULL)
 	{
 		ostringstream out;
@@ -56,13 +67,11 @@ SDL2Surface::SDL2Surface()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
-
-	stopped = false;
 }
 
-SDL2Surface::~SDL2Surface()
+Application::~Application()
 {
-	//Destroy window	
+    //Destroy window	
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
@@ -70,44 +79,41 @@ SDL2Surface::~SDL2Surface()
 	SDL_Quit();
 }
 
-void SDL2Surface::setApplication(Application* app)
+int Application::run()
 {
+    setup();
 
+    bool running = true;
+    while(running)
+    {
+        //Event handler
+        SDL_Event e;
+
+        //Handle events on queue
+        while(SDL_PollEvent( &e ) != 0)
+        {
+            //User requests quit
+            if( e.type == SDL_QUIT )
+            {
+                running = false;
+            }
+        }
+
+        //Clear color buffer
+        glClear(GL_COLOR_BUFFER_BIT);
+        
+        render();
+        
+        //Update screen
+	    SDL_GL_SwapWindow(gWindow);
+    }
+
+    teardown();
+
+	return 0;
 }
 
-bool SDL2Surface::isStopped()
-{
-	return stopped; 
-}
-
-void SDL2Surface::beginRender()
-{
-	//Event handler
-	SDL_Event e;
-
-	//Handle events on queue
-	while(SDL_PollEvent( &e ) != 0)
-	{
-		//User requests quit
-		if( e.type == SDL_QUIT )
-		{
-			stopped = true;
-		}
-	}
-
-	//Clear color buffer
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void SDL2Surface::endRender()
-{
-	//Update screen
-	SDL_GL_SwapWindow(gWindow);
-}
-
-void SDL2Surface::setClearColor(GFloat red, GFloat green, GFloat blue, GFloat alpha)
+void Application::setClearColor(GFloat red, GFloat green, GFloat blue, GFloat alpha)
 {
 	glClearColor(red, green, blue, alpha);
 }
-
-
