@@ -102,6 +102,8 @@ int Application::run()
         //Clear color buffer
         glClear(GL_COLOR_BUFFER_BIT);
         
+		int elapsedTime = SDL_GetTicks();
+		update(elapsedTime);
         render();
         
         //Update screen

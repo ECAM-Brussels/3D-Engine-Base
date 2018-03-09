@@ -13,38 +13,28 @@ private:
     
 public:
     MyApplication(int argc, char* argv[]);
-    ~MyApplication();
+    void update(int time);
     void render();
     void setup();
     void teardown();
 };
 
-MyApplication::MyApplication(int argc, char* argv[]) : Application(argc, argv)
-{
-    cout << "MyApp destroyed" << endl;
-}
+MyApplication::MyApplication(int argc, char* argv[]) : Application(argc, argv) {}
 
-MyApplication::~MyApplication()
+void MyApplication::update(int elapsedTime)
 {
-    cout << "MyApp destroyed" << endl;
+    angle = 180.0f / 1000 * elapsedTime;
+    mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
+    renderer->setModelViewMatrix(modelViewMatrix);
 }
 
 void MyApplication::render()
 {
-    cout << "begin Render" << endl;
-    angle = angle + 1.0f;
-    mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
-    cout << "yop1" << endl;
-    renderer->setModelViewMatrix(modelViewMatrix);
-    cout << "yop2" << endl;
-    renderer->render();
-    cout << "end Render" << endl;
+    renderer->render();   
 }
 
 void MyApplication::setup()
-{
-    cout << "debut setup" << endl;
-    
+{   
     string vertexSrc = 
         "#version 430                                                                                                      \n"
         "layout (location = 0) in vec3 VertexPos3D;                                                                        \n"
@@ -58,7 +48,7 @@ void MyApplication::setup()
     
 
     Shader vShader(vertexSrc, SHADER_VERTEX);
-    cout<<"mid setup"<<endl;
+    
     string pixelSrc = 
         "#version 430                                  \n"
         "out vec4 Fragment;                            \n"
@@ -103,7 +93,6 @@ void MyApplication::setup()
     renderer->setVertexData(*inputs);
     
     setClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
-    cout << "end setup" << endl;
 }
 
 void MyApplication::teardown()

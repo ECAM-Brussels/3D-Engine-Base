@@ -4,17 +4,23 @@
 #include <GL/glu.h>
 #include <GL/freeglut.h>
 #include <iostream>
+#include <sstream>
 
 Application* theApp = NULL;
+
+void appUpdateWrapper(int timerID)
+{
+    glutTimerFunc(Application::FRAME_LENGTH, appUpdateWrapper, 0);
+    int time = glutGet(GLUT_ELAPSED_TIME); 
+    if(theApp) theApp->update(time);
+    glutPostRedisplay();
+}
+
 void appRenderWrapper()
 {
-    //Clear color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
-
     if(theApp) theApp->render();
-
     glutSwapBuffers();
-    glutPostRedisplay();
 }
 
 Application::Application(int argc, char* argv[]) 
@@ -28,15 +34,13 @@ Application::Application(int argc, char* argv[])
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (GLEW_OK != err)	{
-        cerr<<"Error: "<<glewGetErrorString(err)<<endl;
-    } else {
-        if (GLEW_VERSION_4_3)
-        {
-            cout<<"Driver supports OpenGL 4.3\nDetails:"<<endl;
-        }
+        ostringstream out;
+		out <<"Error: "<<glewGetErrorString(err)<<endl;
+		throw Exception(out.str());
     }
-
-    cout << "GLUT App created" << endl;
+    glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 }
 
 Application::~Application()
@@ -49,6 +53,7 @@ int Application::run()
 {
     theApp = this;
     glutDisplayFunc(appRenderWrapper);
+    glutTimerFunc(FRAME_LENGTH, appUpdateWrapper, 0);
     setup();
     glutMainLoop();
     teardown();

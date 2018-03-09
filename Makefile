@@ -1,6 +1,8 @@
 #OBJS specifies which files to compile as part of the project
-#OBJS = src/MyApplication.cpp src/SDL2Application.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp
-OBJS = src/MyApplication.cpp src/GLUTApplication.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp
+OBJS_BASE = src/MyApplication.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp
+
+OBJS_GLUT = src/GLUTApplication.cpp $(OBJS_BASE)
+OBJS_SDL2 = src/SDL2Application.cpp $(OBJS_BASE)
 
 #CC specifies which compiler we're using
 CC = g++
@@ -17,12 +19,18 @@ LIBRARY_PATHS =
 COMPILER_FLAGS = -w
 
 #LINKER_FLAGS specifies the libraries we're linking against
-#LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lglew32 -lglu32 -lopengl32
-LINKER_FLAGS = -lmingw32 -lglew32 -lglu32 -lopengl32 -lfreeglut
+LINKER_FLAGS_BASE = -lmingw32 -lglew32 -lglu32 -lopengl32 
+
+LINKER_FLAGS_GLUT = -lfreeglut $(LINKER_FLAGS_BASE)
+LINKER_FLAGS_SDL2 = -lSDL2main -lSDL2 $(LINKER_FLAGS_BASE)
+
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = Engine3D
 
 #This is the target that compiles our executable
-all : $(OBJS)
-	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+all : $(OBJS_SDL2)
+	$(CC) $(OBJS_SDL2) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS_SDL2) -o $(OBJ_NAME)
+
+glut : $(OBJS_GLUT)
+	$(CC) $(OBJS_GLUT) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS_GLUT) -o $(OBJ_NAME)
