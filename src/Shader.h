@@ -15,11 +15,13 @@ enum ShaderType
 class Shader
 {
 friend class Renderer;
+friend class Program;
 protected:
     GLuint handle;
 public:
     Shader(string src, ShaderType type);
     ~Shader();
+    static Shader* fromFile(string path);
 };
 
 #endif

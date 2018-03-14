@@ -2,30 +2,30 @@
 #define RENDERER_H
 
 #include "opengl.h"
-#include <string>
+#include "vmath.h"
 #include <vector>
-#include "Shader.h"
-#include "VertexData.h"
+#include <string>
 
 using namespace std;
+using namespace vmath;
 
-
+class Program;
 
 class Renderer
 {
 private:
-    GLuint handle;
-    GLuint vertexDataLength;
+    GUInt program;
+    GUInt indexLength;
+    GUInt vertexArray;
+    vector<GUInt> buffers;
 
 public:
-    Renderer(vector<Shader*> &shaders);
+    Renderer(Program* program);
     ~Renderer();
+    void put(string attrib, vec3 *data, int length);
+    void index(GUInt *data, int length);
     void render();
-    void setVertexData(VertexData &inputs);
-    void setProjectionMatrix(mat4 pM);
-    void setModelViewMatrix(mat4 mV);
+    void setMatrix(string attrib, mat4 pM);
 };
-
-
 
 #endif

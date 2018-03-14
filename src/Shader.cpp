@@ -2,6 +2,7 @@
 #include "Exception.h"
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 Shader::Shader(string src, ShaderType type)
 {
@@ -32,4 +33,19 @@ Shader::Shader(string src, ShaderType type)
 Shader::~Shader()
 {
     glDeleteShader(handle);
+}
+
+Shader* Shader::fromFile(string path)
+{
+    size_t point = path.find_last_of('.');
+    string extension = path.substr(point+1, string::npos);
+    ShaderType type = SHADER_VERTEX;
+    if(extension.compare("frag") == 0)
+        type = SHADER_PIXEL;
+
+    ifstream in(path);
+    stringstream buffer;
+    buffer << in.rdbuf();
+
+    return new Shader(buffer.str(), type);
 }

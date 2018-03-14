@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS_BASE = src/MyApplication.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/VertexData.cpp
+OBJS_BASE = src/MyApplication.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/Program.cpp
 
 OBJS_GLUT = src/GLUTApplication.cpp $(OBJS_BASE)
 OBJS_SDL2 = src/SDL2Application.cpp $(OBJS_BASE)

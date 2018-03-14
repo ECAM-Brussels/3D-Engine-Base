@@ -7,8 +7,8 @@ using namespace std;
 class MyApplication: public Application
 {
 private:
+    Program* program = NULL;
     Renderer *renderer = NULL;
-    VertexData *inputs = NULL;
     float angle = 0;
     
 public:
@@ -25,7 +25,7 @@ void MyApplication::update(int elapsedTime)
 {
     angle = 180.0f / 1000 * elapsedTime;
     mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
-    renderer->setModelViewMatrix(modelViewMatrix);
+    renderer->setMatrix("modelViewMatrix", modelViewMatrix);
 }
 
 void MyApplication::render()
@@ -35,45 +35,23 @@ void MyApplication::render()
 
 void MyApplication::setup()
 {   
-    string vertexSrc = 
-        "#version 430                                                                                                      \n"
-        "layout (location = 0) in vec3 VertexPos3D;                                                                        \n"
-        "uniform mat4 projectionMatrix;                                                                                    \n"
-        "uniform mat4 modelViewMatrix;                                                                                     \n"
-        "void main()                                                                                                       \n"
-        "{                                                                                                                 \n"
-        "    gl_Position = projectionMatrix * modelViewMatrix * vec4( VertexPos3D.x, VertexPos3D.y, VertexPos3D.z, 1 );    \n"
-        "}                                                                                                                   ";
+    program = new Program(); 
+    program->addShader(Shader::fromFile("shaders/perspective.vert"));
+    program->addShader(Shader::fromFile("shaders/white.frag"));
+    program->compile();
 
-    
-
-    Shader vShader(vertexSrc, SHADER_VERTEX);
-    
-    string pixelSrc = 
-        "#version 430                                  \n"
-        "out vec4 Fragment;                            \n"
-        "void main()                                   \n"
-        "{                                             \n"
-        "    Fragment = vec4( 1.0, 1.0, 1.0, 1.0 );    \n"
-        "}                                               ";
-    
-    Shader pShader(pixelSrc, SHADER_PIXEL);
-    vector<Shader*> shaders;
-    shaders.push_back(&vShader);
-    shaders.push_back(&pShader);
-    renderer = new Renderer(shaders);
+    renderer = program->createRenderer();
 
     mat4 projectionMatrix = perspective(1.0f, 640.0f/480, 1.0f, 100.0f);
     mat4 lookatMatrix = lookat(vec3(50, 50, 50), vec3(0, 0, 0), vec3(0, 1, 0));
     projectionMatrix = projectionMatrix * lookatMatrix;
 
     mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f); 
-    renderer->setProjectionMatrix(projectionMatrix);
-    renderer->setModelViewMatrix(modelViewMatrix);
+    renderer->setMatrix("projectionMatrix", projectionMatrix);
+    renderer->setMatrix("modelViewMatrix", modelViewMatrix);
 
     //IBO data
 	GLuint indexData[] = { 0, 1, 2, 0, 2, 3 };
-    //indexBuffer = new Renderer::IndexBuffer(indexData, 4);
 
     //VBO data
     vec3 vertexData[] =
@@ -83,14 +61,9 @@ void MyApplication::setup()
         vec3(0.5f,  0.5f, 0.0f),
         vec3(-0.5f,  0.5f, 0.0f)
     };
-    //vertexBuffer = new Renderer::VertexBuffer(vertexData, 4);
 
-    inputs = new VertexData();
-    inputs->put(0, vertexData, 4);
-    inputs->index(indexData, 6);
-    inputs->pack();
-
-    renderer->setVertexData(*inputs);
+    renderer->put("VertexPos3D", vertexData, 4);
+    renderer->index(indexData, 6);
     
     setClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
 }
@@ -98,7 +71,7 @@ void MyApplication::setup()
 void MyApplication::teardown()
 {
     delete renderer;
-    delete inputs;
+    delete program;
 }
 
 int main(int argc, char** argv)
@@ -106,7 +79,6 @@ int main(int argc, char** argv)
     try 
     {
         MyApplication app = MyApplication(argc, argv); 
-        //MyApplication app = MyApplication(new SDL2Surface());
 	    return app.run();
     }
 	catch(Exception e)

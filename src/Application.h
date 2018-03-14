@@ -2,10 +2,6 @@
 #define APPLICATION_H
 
 #include "opengl.h"
-#include "Shader.h"
-#include "VertexData.h"
-#include "Renderer.h"
-#include "Exception.h"
 
 class Application
 {
@@ -14,7 +10,6 @@ public:
     static const int SCREEN_WIDTH = 640;
     static const int SCREEN_HEIGHT = 480;
     static const int FRAME_LENGTH = 1000/60;
-
 
     Application(int argc, char* argv[]);
     virtual ~Application();
@@ -25,5 +20,10 @@ public:
     virtual void setup() = 0;
     virtual void teardown() = 0;
 };
+
+#include "Shader.h"
+#include "Program.h"
+#include "Renderer.h"
+#include "Exception.h"
 
 #endif
