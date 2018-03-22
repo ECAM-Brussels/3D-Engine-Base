@@ -42,6 +42,8 @@ Shader* Shader::fromFile(string path)
     ShaderType type = SHADER_VERTEX;
     if(extension.compare("frag") == 0)
         type = SHADER_PIXEL;
+    if(extension.compare("comp") == 0)
+        type = SHADER_COMPUTE;
 
     ifstream in(path);
     stringstream buffer;

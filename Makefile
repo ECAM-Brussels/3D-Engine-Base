@@ -1,8 +1,10 @@
 #OBJS specifies which files to compile as part of the project
-OBJS_BASE = src/MyApplication.cpp src/Exception.cpp src/Renderer.cpp src/Shader.cpp src/Program.cpp src/Mesh.cpp
+OBJS_APP = src/Simulator.cpp 
 
-OBJS_GLUT = src/GLUTApplication.cpp $(OBJS_BASE)
-OBJS_SDL2 = src/SDL2Application.cpp $(OBJS_BASE)
+OBJS_CORE = src/core/Exception.cpp src/core/Renderer.cpp src/core/Shader.cpp src/core/Program.cpp src/core/Buffer.cpp src/core/Computer.cpp
+
+OBJS_GLUT = src/core/GLUTApplication.cpp $(OBJS_CORE) $(OBJS_APP)
+OBJS_SDL2 = src/core/SDL2Application.cpp $(OBJS_CORE) $(OBJS_APP)
 
 #CC specifies which compiler we're using
 CC = g++

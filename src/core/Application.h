@@ -25,5 +25,6 @@ public:
 #include "Program.h"
 #include "Renderer.h"
 #include "Exception.h"
+#include "Computer.h"
 
 #endif

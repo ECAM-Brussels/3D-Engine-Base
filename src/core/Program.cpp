@@ -12,13 +12,13 @@ Program::~Program()
 }
 void Program::addShader(Shader* shader)
 {
-    if(compiled) throw Exception("Program already compiled");
+    if(linked) throw Exception("Program already compiled");
     shaders.push_back(shader);
 }
 
-void Program::compile()
+void Program::link()
 {
-    if(compiled) throw Exception("Program already compiled");
+    if(linked) throw Exception("Program already compiled");
 
     for(int i = 0; i < shaders.size(); i++)
     	glAttachShader(program, shaders[i]->handle);
@@ -44,10 +44,20 @@ void Program::compile()
     for(int i = 0; i < shaders.size(); i++)
         glDetachShader(program, shaders[i]->handle);
 
-    compiled = true;
+    linked = true;
 }
 
 Renderer* Program::createRenderer()
 {
     return new Renderer(this);
+}
+
+Computer* Program::createComputer()
+{
+    return new Computer(this);
+}
+
+GUInt Program::getName()
+{
+    return program;
 }

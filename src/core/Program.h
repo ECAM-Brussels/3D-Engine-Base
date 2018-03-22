@@ -8,12 +8,12 @@ using namespace std;
 
 class Renderer;
 class Shader;
+class Computer;
 
 class Program
 {
-friend class Renderer;
 private:
-    bool compiled = false;
+    bool linked = false;
     GUInt program;
     vector<Shader*> shaders;
 
@@ -21,11 +21,14 @@ public:
     Program();
     ~Program();
     void addShader(Shader* shader);
-    void compile();
+    void link();
     Renderer* createRenderer();
+    Computer* createComputer();
+    GUInt getName();
 };
 
 #include "Renderer.h"
 #include "Shader.h"
+#include "Computer.h"
 
 #endif

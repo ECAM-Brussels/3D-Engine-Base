@@ -1,8 +1,8 @@
 #version 430                                                                                              
-in vec3 VertexPos3D;                                                                    
-uniform mat4 projectionMatrix;                                                                             
-uniform mat4 modelViewMatrix;                                                                               
-void main()                                                                                                     
-{                                                                                                            
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( VertexPos3D.x, VertexPos3D.y, VertexPos3D.z, 1 );
+in vec3 vertex;                                                                    
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+void main()
+{
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( vertex.x, vertex.y, vertex.z, 1 );
 }

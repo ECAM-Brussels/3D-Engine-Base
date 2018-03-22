@@ -5,6 +5,7 @@
 #include <GL/glu.h>
 
 typedef GLfloat GFloat;
+typedef GLdouble GDouble;
 typedef GLint GInt;
 typedef GLuint GUInt;
 

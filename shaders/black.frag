@@ -2,5 +2,5 @@
 out vec4 Fragment;
 void main()
 {
-    Fragment = vec4( 1.0, 1.0, 1.0, 1.0 );
+    Fragment = vec4( 0.0, 0.0, 0.0, 1.0 );
 }

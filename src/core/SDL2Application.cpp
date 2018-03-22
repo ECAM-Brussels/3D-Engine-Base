@@ -22,10 +22,15 @@ Application::Application(int argc, char* argv[])
 		throw Exception(out.str());
 	}
 	
-	//Use OpenGL 3.1 core
+	//Use OpenGL 4.3 core
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
+    SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 8 );
+    SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 8 );
+    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
 	//Create window
 	gWindow = SDL_CreateWindow("ECAM 3D Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
@@ -66,6 +71,13 @@ Application::Application(int argc, char* argv[])
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(0.0, 1.0);
+
+	glPointSize(5);
 }
 
 Application::~Application()
@@ -99,7 +111,7 @@ int Application::run()
         }
 
         //Clear color buffer
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
 		int elapsedTime = SDL_GetTicks();
 		update(elapsedTime);
@@ -117,4 +129,5 @@ int Application::run()
 void Application::setClearColor(GFloat red, GFloat green, GFloat blue, GFloat alpha)
 {
 	glClearColor(red, green, blue, alpha);
+	glClearDepth(1.0f);
 }
