@@ -1,5 +1,6 @@
 #OBJS specifies which files to compile as part of the project
-OBJS_APP = src/Simulator.cpp 
+OBJS_APP = src/Simulator.cpp
+#OBJS_APP = src/MyApplication.cpp src/Mesh.cpp 
 
 OBJS_CORE = src/core/Exception.cpp src/core/Renderer.cpp src/core/Shader.cpp src/core/Program.cpp src/core/Buffer.cpp src/core/Computer.cpp
 
