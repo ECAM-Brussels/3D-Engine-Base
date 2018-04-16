@@ -1,11 +1,27 @@
-#include "mesh.h"
+#include "Mesh.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
+Mesh::Mesh(Buffer* vertex, size_t vertexCount, Buffer* index, size_t indexCount)
+{
+    vertexData = vertex;
+    indexData = index;
+    this->vertexCount = vertexCount;
+    this->indexCount = indexCount;
+}
+
+Mesh::~Mesh()
+{
+    if(indexData) delete indexData;
+    if(vertexData) delete vertexData;
+}
+
 Mesh* Mesh::fromOBJ(string path)
 {
-    Mesh* mesh = new Mesh();
+    vector<VertexData> vertex;
+    vector<GUInt> index;
+    
     ifstream file(path);
 
     for(string line; getline(file, line); )
@@ -21,74 +37,59 @@ Mesh* Mesh::fromOBJ(string path)
             case 'v':
                 GFloat x, y, z;
                 str >> cmd >> x >> y >> z;
-                mesh->vertexData.push_back(vec3(x, y, z));
+                vertex.push_back(VertexData(vec3(x, y, z), vec3(0)));
             break;
             case 'f':
                 GUInt v1, v2, v3;
                 str >> cmd >> v1 >> v2 >> v3;
-                mesh->indexData.push_back(v1-1);
-                mesh->indexData.push_back(v2-1);
-                mesh->indexData.push_back(v3-1);
+                index.push_back(v1-1);
+                index.push_back(v2-1);
+                index.push_back(v3-1);
             break;
         }
     }
 
-    mesh->computeNormal();
+    for(int i = 0; i < index.size()/3; i++)
+    {
+        vec3 faceNormal = normalize(cross(
+            vertex[index[3*i+1]].position-vertex[index[3*i]].position,
+            vertex[index[3*i+2]].position-vertex[index[3*i]].position
+        ));
+
+        vertex[index[3*i]].normal += faceNormal;
+        vertex[index[3*i+1]].normal += faceNormal;
+        vertex[index[3*i+2]].normal += faceNormal;
+    }
+
+    for(int i = 0; i < vertex.size(); i++)
+    {
+        vertex[i].normal = normalize(vertex[i].normal);
+    }
+
+    Mesh* mesh = new Mesh(
+        new Buffer(vertex.data(), vertex.size()*sizeof(VertexData)), vertex.size(),
+        new Buffer(index.data(), index.size()*sizeof(GUInt)), index.size()
+    );
 
     return mesh;
 }
 
-vec3* Mesh::getVertex()
+Buffer* Mesh::getVertex()
 {
-    return vertexData.data();
+    return vertexData;
 }
 
-GUInt* Mesh::getIndex()
+Buffer* Mesh::getIndex()
 {
-    return indexData.data();
-}
-
-vec3* Mesh::getNormal()
-{
-    return normalData.data();
+    return indexData;
 }
 
 size_t Mesh::getVertexCount()
 {
-    return vertexData.size();
+
 }
 
 size_t Mesh::getIndexCount()
 {
-    return indexData.size();
-}
 
-size_t Mesh::getNormalCount()
-{
-    return normalData.size();
-}
-
-void Mesh::computeNormal()
-{
-    for(int i = 0; i < getVertexCount(); i++)
-    {
-        normalData.push_back(vec3(0, 0, 0));
-    }
-
-    for(int i = 0; i < getIndexCount()/3; i++)
-    {
-        vec3 faceNormal = normalize(cross(
-            vertexData[indexData[i]]-vertexData[indexData[i+1]],
-            vertexData[indexData[i]]-vertexData[indexData[i+2]]
-        ));
-
-        normalData[indexData[i]] += faceNormal;
-        normalData[indexData[i+1]] += faceNormal;
-        normalData[indexData[i+2]] += faceNormal;
-    }
-
-    for(int i = 0; i < getVertexCount(); i++)
-    {
-        normalData[i] = normalize(normalData[i]);
-    }
 }

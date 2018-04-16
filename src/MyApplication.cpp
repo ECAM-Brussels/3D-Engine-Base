@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "core/Application.h"
 #include "Mesh.h"
 #include <iostream>
 
@@ -12,6 +12,9 @@ private:
     Renderer *renderer = NULL;
     float angle = 0;
     Mesh* dragon = NULL;
+    Buffer* vertex = NULL;
+    Buffer* normal = NULL;
+    Buffer* index = NULL;
     
 public:
     MyApplication(int argc, char* argv[]);
@@ -25,39 +28,51 @@ MyApplication::MyApplication(int argc, char* argv[]) : Application(argc, argv) {
 
 void MyApplication::update(int elapsedTime)
 {
-    angle = 180.0f / 1000 * elapsedTime;
-    mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
-    renderer->setMatrix("modelViewMatrix", modelViewMatrix);
+    angle = 45.0f / 1000 * elapsedTime;
+    mat4 modelMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
+    renderer->setMatrix("modelMatrix", modelMatrix);
 }
 
 void MyApplication::render()
 {
-    renderer->render();   
+    renderer->indexedRender(PRIMITIVE_TRIANGLES, dragon->getIndexCount()); 
 }
 
 void MyApplication::setup()
-{   
+{
+     
     program = new Program(); 
-    program->addShader(Shader::fromFile("shaders/perspective.vert"));
-    program->addShader(Shader::fromFile("shaders/white.frag"));
-    program->compile();
+    program->addShader(Shader::fromFile("shaders/diffuse.vert"));
+    program->addShader(Shader::fromFile("shaders/diffuse.frag"));
+    program->link();
 
     renderer = program->createRenderer();
 
-    mat4 projectionMatrix = perspective(1.0f, 640.0f/480, 1.0f, 1000.0f);
-    mat4 lookatMatrix = lookat(vec3(500, 500, 500), vec3(0, 3, 0), vec3(0, 1, 0));
-    projectionMatrix = projectionMatrix * lookatMatrix;
+    mat4 projectionMatrix = perspective(30.0f, 640.0f/480, 0.001f, 100.0f);
 
-    mat4 modelViewMatrix = rotate(angle, 0.0f, 1.0f, 0.0f); 
+    mat4 viewMatrix = lookat(vec3(15, 15, 15), vec3(0, 4, 0), vec3(0, 1, 0));
+    mat4 modelMatrix = rotate(angle, 0.0f, 1.0f, 0.0f);
     renderer->setMatrix("projectionMatrix", projectionMatrix);
-    renderer->setMatrix("modelViewMatrix", modelViewMatrix);
+    renderer->setMatrix("modelMatrix", modelMatrix);
+    renderer->setMatrix("viewMatrix", viewMatrix);
+    renderer->setVec("lightPosition", vec3(1000, 1000, -1000));
 
     dragon = Mesh::fromOBJ("models/dragon.obj");
 
-    renderer->put("VertexPos3D", dragon->getVertex(), dragon->getVertexCount());
-    renderer->index(dragon->getIndex(), dragon->getIndexCount());
+     
+
+    //vertex = new Buffer(dragon->getVertexCount(), 3, FLOAT, dragon->getVertex());
+    //normal = new Buffer(dragon->getVertexCount(), 3, FLOAT, dragon->getNormal());
+    //index = new Buffer(dragon->getIndexCount(), 1, UINT, dragon->getIndex());
+
+     
+
+    renderer->setVertexData("vertexPos", dragon->getVertex(), TYPE_FLOAT, 0, 3, sizeof(VertexData));
+    renderer->setVertexData("vertexNormal", dragon->getVertex(), TYPE_FLOAT, sizeof(vec3), 3, sizeof(VertexData));
+    renderer->index(dragon->getIndex());
     
-    setClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
+    setClearColor(0.95f, 0.95f, 0.95f, 1.0f); 
+     
 }
 
 void MyApplication::teardown()
