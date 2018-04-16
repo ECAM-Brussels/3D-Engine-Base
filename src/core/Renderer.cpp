@@ -71,14 +71,19 @@ void Renderer::render(Primitive primitive, size_t count)
     glUseProgram(0);
 }
 
-void Renderer::render(Primitive primitive, Buffer* index, size_t count)
+void Renderer::index(Buffer* index)
+{
+    glBindVertexArray(vertexArray);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index->getName());
+    glBindVertexArray(NULL);
+}
+
+void Renderer::indexedRender(Primitive primitive, size_t count)
 {
     glUseProgram(program);
 
     glBindVertexArray(vertexArray);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index->getName());
     glDrawElements(primitive, count, GL_UNSIGNED_INT, NULL);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
 
     glUseProgram(0);
 }

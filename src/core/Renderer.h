@@ -43,9 +43,9 @@ public:
     void setVec(string attrib, vec3 v);
     void setVec(string attrib, vec4 v);
     void setScal(string attrib, float f);
-    void index(GUInt *data, int length);
+    void index(Buffer* index);
     void render(Primitive primitive, size_t count);
-    void render(Primitive primitive, Buffer* index, size_t count);
+    void indexedRender(Primitive primitive, size_t count);
 };
 
 #include "Buffer.h"
